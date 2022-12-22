@@ -17,7 +17,7 @@ const DoctorProvider = ({ children }) => {
   }, [])
 
   const addDoctor = (doctor) => {
-    axios.post('/api/doctors', { doctors })
+    axios.post('/api/doctors', { doctor })
       .then( res => setDoctors([...doctors, res.data]))
       .catch( err => console.log(err))
   }
