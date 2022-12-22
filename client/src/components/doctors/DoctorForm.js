@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Form, Button } from 'react-bootstrap';
 
 const DoctorForm = ({ addDoctor }) => {
-  const [doctor, setDoctor] = useState({ doctor_fname: '', doctor_lname: '', specility: '' })
+  const [doctor, setDoctor] = useState({ doctor_fname: '', doctor_lname: '', specialty: '' })
     
   const handleSubmit = (e) => {
     e.preventDefault()
     addDoctor(doctor)
-    setDoctor({ doctor_fname: '', doctor_lname: '', specility: '' })
+    setDoctor({ doctor_fname: '', doctor_lname: '', specialty: '' })
   }
 
   return (
@@ -36,14 +36,14 @@ const DoctorForm = ({ addDoctor }) => {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Specility</Form.Label>
+          <Form.Label>Specialty</Form.Label>
           <Form.Select 
             // aria-label="Default select example"
-            name="specility"
-            value={doctor.specility}
-            onChange={(e) => setDoctor({ ...doctor, specility: e.target.value })}
+            name="specialty"
+            value={doctor.specialty}
+            onChange={(e) => setDoctor({ ...doctor, specialty: e.target.value })}
           >
-            <option>Specilities</option>
+            <option>Select a Specialty</option>
             <option value="OBGYN">OBGYN</option>
             <option value="Emergency Medicine">Emergency Medicine</option>
             <option value="ENT">ENT</option>
