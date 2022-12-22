@@ -1,4 +1,4 @@
-10.times do
+=begin 10.times do
   doctor = Doctor.create(
     doctor_fname: Faker::Name.name,
     doctor_lname: Faker::Name.name,
@@ -24,3 +24,4 @@ puts User.all.count
 
 puts "# Appointments:"
 puts Appointment.all.count
+=end

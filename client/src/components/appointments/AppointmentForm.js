@@ -1,39 +1,42 @@
-import { useState, useEffect } from "react";
-import axios from 'axios';
-import { Form, Button } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Button, Form } from 'react-bootstrap';
+import { AppointmentConsumer } from '../../providers/AppointmentProvider';
 
-const AppointmentForm = ({ addAppointment, doctorId }) => {
-  const [appointment, setAppointment] = useState({ user_id: 0 })
-  const [unAppointed, setUnAppointed] = userState([])
+const AppointmentForm = ({ addAppointment, setAdd, users, id, user_id, location, appt_date_time, info, doctor_id, updateAppointment, setEdit, getAllUsers }) => {
+  const [appointment, setAppointment] = useState({ location: '', appt_date_time: '', info: '', user_id: users[0].id })
 
   useEffect( () => {
-    axios.get(`/api/doctors/${doctorId}/unAppointed`)
-      .then( res => setUnAppointed(res.data) )
-      .catch( err => console.log(err) )
+    getAllUsers(doctor_id)
+    if (id) {
+      setAppointment({ location: '', appt_date_time: '', info: '', user_id: users[0].id })
+    }
   }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    addAppointment(appointment)
-    setAppointment({ role: '', user_id: 0 })
+    if (id) {
+      updateAppointment(doctor_id, id, appointment)
+      setEdit(false)
+    } else {
+      addAppointment(doctor_id, appointment)
+      setAdd(false)
+    }
+    setAppointment({ user_id: 0 })
   }
 
   return (
     <>
-      <h1>Add Appointment</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
-          <Form.Label>User</Form.Label>
-          <Form.Select 
-            aria-label="Default select example"
-            name="user"
-            value={appointment.user}
-            onChange={(e) => setEnrollment({ ...appointment, user_id: e.target.value })}
+          <Form.Label>User to set appointment for</Form.Label>
+          <Form.Select
+            name='user_id'
+            value={appointment.user_id}
+            onChange={(e) => setAppointment({...appointment, user_id: e.target.value})}
           >
-            <option>Users</option>
-            { unAppointed.map((u) => (
+            { users.map( u => 
               <option value={u.id}>{u.first_name} {u.last_name}</option>
-            ))}
+            )}
           </Form.Select>
         </Form.Group>
         <Button variant="primary" type="submit">
@@ -41,7 +44,13 @@ const AppointmentForm = ({ addAppointment, doctorId }) => {
         </Button>
       </Form>
     </>
-  );
+  )
 }
 
-export default AppointmentForm;
+const ConnnectAppointmentForm = (props) => (
+  <AppointmentConsumer>
+    { value => <AppointmentForm {...props} {...value} />}
+  </AppointmentConsumer>
+)
+
+export default ConnnectAppointmentForm;
