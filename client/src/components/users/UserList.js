@@ -1,14 +1,19 @@
+import { ListGroup, Button } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 
 const UserList = ({ users }) => (
   <>
-    <h1>Users</h1>
-    <h2>{ users.length <= 0 ? "No Users" : "" }</h2> 
-    { users.map( u => 
-      <Link to={`/users/${u.id}`}>{u.first_name} {u.last_name}</Link>
-    )}
+    <ListGroup variant="flush">
+      { users.map( u =>
+        <ListGroup.Item>
+          {u.first_name} {u.last_name}
+          <Link to={`/users/${u.id}`}>
+            <Button>Show</Button>
+          </Link>
+        </ListGroup.Item>
+      )}
+    </ListGroup>
   </>
 )
-
 
 export default UserList;

@@ -1,17 +1,17 @@
-import Appointment from './Appointment';
+import { ListGroup } from "react-bootstrap";
+import AppointmentShow from "./AppointmentShow";
 
-const AppointmentList = ({ appointments, appointed }) => (
+const AppointmentList = ({ appointments }) => (
   <>
-    <h1>All Appointments</h1>
-    { appointments.map( a => 
-      <Appointment 
-        key={a.id}
-        {...a}
-        appointed={appointed}
-      />
-    )}  
+    <ListGroup>
+      { appointments.map( e => 
+        <AppointmentShow 
+          key={e.id}
+          {...e}
+        />
+      )}
+    </ListGroup>
   </>
 )
 
-
-export default AppointmentList;
+export default AppointmentList

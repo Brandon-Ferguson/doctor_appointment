@@ -1,31 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { Container, Button, Modal } from 'react-bootstrap';
 import UserList from './UserList';
-import axios from 'axios';
 import UserForm from './UserForm';
+import { UserConsumer } from '../../providers/UserProvider';
 
-const Users = ({}) => {
-  const [users, setUsers] = useState([])
-
-  useEffect( () => {
-    axios.get('/api/users')
-      .then( res => setUsers(res.data) )
-      .catch( err => console.log(err) )
-  }, [])
-
-  const addUser = (user) => {
-    axios.post('/api/users', { user })
-      .then( res => setUsers([...users, res.data]) )
-      .catch( err => console.log(err) )
-  }
+const Users = ({ users }) => {
+  const [adding, setAdd] = useState(false)
 
   return (
-    <>
-      <UserForm addUser={addUser} />
+    <Container>
+      <Button variant="primary" onClick={() => setAdd(true)}>
+        +
+      </Button>
+
+      <Modal show={adding} onHide={() => setAdd(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <UserForm setAdd={setAdd} />
+        </Modal.Body>
+      </Modal>
+      <h1>All Users</h1>
       <UserList 
         users={users}
       />
-    </>
+    </Container>
   )
 }
 
-export default Users;
+const ConnectedUsers = (props) => (
+  <UserConsumer>
+    { value => <Users {...props} {...value} />}
+  </UserConsumer>
+)
+export default ConnectedUsers;

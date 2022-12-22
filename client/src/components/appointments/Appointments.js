@@ -1,38 +1,51 @@
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams, useLocation } from 'react-router-dom';
+import { Container, Button, Modal } from "react-bootstrap";
 import AppointmentList from './AppointmentList';
+import AppointmentForm from './AppointmentForm';
+import { AppointmentConsumer } from "../../providers/AppointmentProvider";
 
-const Appointments = () => {
-  const [appointments, setAppointments] = useState([])
-  const [appointed, setAppointed] = useState([])
-
+const Appointments = ({ getAllAppointments, appointments }) => {
   const { doctorId } = useParams()
   const location = useLocation()
-  const { doctorName } = location.state
+  const { doctorDoctor_fname } = location.state
+  
+  const [adding, setAdd] = useState(false);
 
   useEffect( () => {
-    axios.get(`/api/doctors/${doctorId}/appointments`)
-      .then( res => {
-        setAppointments(res.data)
-      })
-      .catch( err => console.log(err) )
+    getAllAppointments(doctorId)
   }, [])
-
-  useEffect( () => {
-    axios.get(`/api/doctors/${doctorId}/appointed`)
-      .then( res => {
-        setAppointed(res.data)
-      })
-      .catch( err => console.log(err) )
-  }, [])
-
+  
   return (
-    <>
-      <h1>{doctorName}</h1>
-      <AppointmentList appointments={appointments} appointed={appointed} />
-    </>
+    <Container>
+      <Button variant="primary" onClick={() => setAdd(true)}>
+        +
+      </Button>
+
+      <Modal show={adding} onHide={() => setAdd(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create Appointment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <AppointmentForm 
+            setAdd={setAdd}
+            doctor_id={doctorId}
+          />
+        </Modal.Body>
+      </Modal>
+
+      <h1>All Appointments for Doctor {doctorDoctor_fname}</h1>
+      <AppointmentList 
+        appointments={appointments}
+      />
+    </Container>
   )
 }
 
-export default Appointments;
+const ConnectedAppointments = (props) => (
+  <AppointmentConsumer>
+    { value => <Appointments {...props} {...value} />}
+  </AppointmentConsumer>
+)
+
+export default ConnectedAppointments;

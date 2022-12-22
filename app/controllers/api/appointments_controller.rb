@@ -10,15 +10,6 @@ class Api::AppointmentsController < ApplicationController
     render json: @appointment 
   end
 
-  def noAppointmentUsers
-    @users = User.all - @doctor.users
-    render json: { users: @users }
-  end
-
-  def yesAppointmentUsers
-    render json: @doctor.users
-  end
-
   def create
     @appointment = @doctor.appointments.new(appointment_params)
     if @appointment.save
@@ -41,6 +32,10 @@ class Api::AppointmentsController < ApplicationController
     render json: { message: 'Appointment Cancelled' }
   end
 
+  def avausers
+    render json: User.all - @doctor.users
+  end
+
  private
    def set_doctor
      @doctor = Doctor.find(params[:doctor_id]) 
@@ -51,6 +46,6 @@ class Api::AppointmentsController < ApplicationController
    end
 
    def appointment_params
-     params.require(:appointment).permit(:user_id)
+     params.require(:appointment).permit(:user_id, :location, :appt_date_time, :info)
    end
 end

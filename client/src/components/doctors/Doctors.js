@@ -1,32 +1,43 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import DoctorList from './DoctorList';
-import axios from 'axios';
 import DoctorForm from './DoctorForm';
+import { Button, Container } from 'react-bootstrap';
+import { DoctorConsumer } from '../../providers/DoctorProvider';
 
-const Doctors = ({}) => {
- const [doctors, setDoctors] = useState([])
-
- useEffect( () => {
-   axios.get('/api/doctors')
-     .then( res => setDoctors(res.data) )
-     .catch( err => console.log(err) )
- }, [])
-
- const addDoctor = (doctor) => {
-   axios.post('/api/doctors', { doctor })
-     .then( res => setDoctors([...doctors, res.data]) )
-     .catch( err => console.log(err) )
- }
-
- return (
-    <>
-     <DoctorForm addDoctor={addDoctor} />
-     <h1>Doctors</h1>
-     <DoctorList 
-       doctors={doctors}
-     />
-    </>
+const Doctors = ({ doctors }) => {
+  const [adding, setAdd] = useState(false)
+  // toggling add form and using conditional rendering option
+  return (
+    <Container>
+      { adding ? 
+        <>
+          <DoctorForm
+            setAdd={setAdd}
+          />
+          <Button onClick={() => setAdd(false)}>
+            Cancel
+          </Button>
+        </>
+        :
+        <Button
+        onClick={() => setAdd(true)}
+        >
+          +
+        </Button>
+      }
+      <br />
+      <h1>All Doctors</h1>
+      <DoctorList 
+        doctors={doctors}
+      />
+    </Container>
   )
 }
 
-export default Doctors;
+const ConnectedDoctors = (props) => (
+  <DoctorConsumer>
+    { value => <Doctors {...props} {...value} />}
+  </DoctorConsumer>
+)
+
+export default ConnectedDoctors;
