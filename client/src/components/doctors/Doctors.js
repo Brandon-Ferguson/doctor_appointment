@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react;';
+import { useState, useEffect } from 'react';
 import DoctorList from './DoctorList';
 import axios from 'axios';
 import DoctorForm from './DoctorForm';
@@ -12,7 +12,7 @@ const Doctors = ({}) => {
      .catch( err => console.log(err) )
  }, [])
 
- const addDoctor = (doctors) => {
+ const addDoctor = (doctor) => {
    axios.post('/api/doctors', { doctor })
      .then( res => setDoctors([...doctors, res.data]) )
      .catch( err => console.log(err) )
